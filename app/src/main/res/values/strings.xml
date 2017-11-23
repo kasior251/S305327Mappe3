@@ -1,0 +1,11 @@
+<resources>
+    <string name="app_name">S305327Mappe3</string>
+    <string name="add_new">Add new pet</string>
+    <string name="nothing">No pets registered yet</string>
+    <string name="add_header">Register a new pet</string>
+    <string name="cat">cat</string>
+    <string name="dog">dog</string>
+    <string name="name">Name: </string>
+    <string name="born">Birth date: </string>
+    <string name="choose_date">Set date</string>
+</resources>
