@@ -26,7 +26,8 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/pet_name" />
+            android:id="@+id/pet_name"
+            style="@style/label"/>
     </LinearLayout>
 
     <LinearLayout
@@ -41,8 +42,39 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/pet_birth_date"/>
+            android:id="@+id/pet_birth_date"
+            style="@style/label"/>
     </LinearLayout>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal">
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="@string/weight"
+            style="@style/label"/>
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/weight"
+            android:text="@string/no_data"
+            style="@style/label"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/update"
+            android:onClick="updateWeight"/>
+    </LinearLayout>
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="@string/add_treatment"
+        android:onClick="addNewTreatment"
+        android:background="@drawable/button"
+        style="@style/submit_button"/>
 
 
 </LinearLayout>

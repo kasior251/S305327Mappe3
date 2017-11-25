@@ -21,8 +21,14 @@ public class DBHandler extends SQLiteOpenHelper {
     static String KEY_NAME = "Name";
     static String KEY_BIRTH = "BirthDate";
     static String KEY_TYPE = "Type";
+    static String KEY_WEIGHT = "Weight";
     static int DATABASE_VERSION = 1;
     static String DATABASE_NAME = "PetDB";
+    static String TABLE_TREATMENTS = "Treatments";
+    static String KEY_PET = "Pet";
+    static String KEY_TREATMENT_NAME = "Name";
+    static String KEY_TREATMENT_DATE = "TreatmentDate";
+    static String KEY_NEXT_TREATMENT = "NextTreatmentDate";
 
     //konstruktør
     public DBHandler(Context context) {
@@ -30,10 +36,18 @@ public class DBHandler extends SQLiteOpenHelper {
     }
     @Override
     public void onCreate(SQLiteDatabase sqLiteDatabase) {
+        //streng for å lage pet Table
         String CREATE = "CREATE TABLE " + TABLE_PETS + "(" + KEY_ID + " INTEGER PRIMARY KEY, " + KEY_NAME + " TEXT, " +
-                KEY_BIRTH + " TEXT, " + KEY_TYPE + " INTEGER)";
+                KEY_BIRTH + " TEXT, " + KEY_TYPE + " INTEGER, " + KEY_WEIGHT + " DOUBLE)";
+        //Streng for å lage Treatments table - for å registrere behandlinger
+        String CREATE2 = "CREATE TABLE " + TABLE_TREATMENTS + "(" + KEY_ID + " INTEGER PRIMARY KEY, " +
+                KEY_PET + " INTEGER, " + KEY_TREATMENT_NAME + " TEXT, " + KEY_TREATMENT_DATE + " TEXT, " +
+                KEY_NEXT_TREATMENT + " TEXT, " +
+                "FOREIGN KEY(" + KEY_PET + ") REFERENCES " + TABLE_PETS +  "(" + KEY_ID +
+                ")) ";
         Log.d("SQL", CREATE);
         sqLiteDatabase.execSQL(CREATE);
+        sqLiteDatabase.execSQL(CREATE2);
     }
 
     @Override
@@ -49,6 +63,7 @@ public class DBHandler extends SQLiteOpenHelper {
         values.put(KEY_NAME, pet.getName());
         values.put(KEY_BIRTH, pet.getBirthDate());
         values.put(KEY_TYPE, pet.getType());
+        values.put(KEY_WEIGHT, pet.getWeight());
         sqLiteDatabase.insert(TABLE_PETS, null, values);
         sqLiteDatabase.close();
     }
@@ -66,6 +81,7 @@ public class DBHandler extends SQLiteOpenHelper {
                 pet.setName(cursor.getString(1));
                 pet.setBirthDate(cursor.getString(2));
                 pet.setType(cursor.getInt(3));
+                pet.setWeight(cursor.getLong(4));
                 allPets.add(pet);
             } while (cursor.moveToNext());
             cursor.close();
@@ -85,7 +101,16 @@ public class DBHandler extends SQLiteOpenHelper {
             pet.setName(cursor.getString(1));
             pet.setBirthDate(cursor.getString(2));
             pet.setType(cursor.getInt(3));
+            pet.setWeight(cursor.getDouble(4));
         }
         return pet;
+    }
+
+    public int updateWeight(int id, double weight) {
+        SQLiteDatabase db = getWritableDatabase();
+        ContentValues values = new ContentValues();
+        values.put(KEY_WEIGHT, weight);
+        int updated = db.update(TABLE_PETS, values, KEY_ID + " = ?", new String[]{String.valueOf(id)});
+        return updated;
     }
 }

@@ -11,9 +11,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
-import android.widget.ImageButton;
 import android.widget.LinearLayout;
-import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.ArrayList;
@@ -32,6 +30,12 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
         toolbar = (Toolbar) findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
         db = new DBHandler(this);
+        showAllPets();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
         showAllPets();
     }
 
@@ -61,8 +65,8 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
 
     public void showAllPets() {
         list = (LinearLayout)findViewById(R.id.list);
+        list.removeAllViews();
         List<Pet> pets = db.findAllPets();
-        Toast.makeText(this, "In method found " + pets.size() + " pets", Toast.LENGTH_SHORT).show();
         List<Button> buttons = new ArrayList<>();
         for (Pet p : pets) {
             Button button = new Button(this);
@@ -83,24 +87,23 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
                 LinearLayout.LayoutParams.WRAP_CONTENT, LinearLayout.LayoutParams.WRAP_CONTENT);
         checkParams.setMargins(10, 10, 10, 10);
         checkParams.gravity = Gravity.CENTER;
-        Toast.makeText(this, "In method made " + buttons.size() + " buttons", Toast.LENGTH_SHORT).show();
         for (Button b : buttons) {
             list.addView(b, checkParams);
         }
-
-
     }
 
     @Override
     public void onClick(View view) {
+        //Få id til knappen for å vite hvilket dyr ble valgt
         int id = view.getId();
-        Toast.makeText(this, "You clicked " + id, Toast.LENGTH_SHORT).show();
         Pet pet = db.getPet(id);
         Intent i = new Intent(this, PetData.class);
+        //legg till alle data om dyret i intenten
         i.putExtra("ID", id);
         i.putExtra("NAME", pet.getName());
         i.putExtra("BIRTH", pet.getBirthDate());
         i.putExtra("TYPE", pet.getType());
+        i.putExtra("WEIGHT", pet.getWeight());
         startActivity(i);
     }
 }

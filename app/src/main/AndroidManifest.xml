@@ -18,6 +18,7 @@
         </activity>
         <activity android:name=".AddNewPet" android:parentActivityName=".MainActivity" />
         <activity android:name=".PetData" android:parentActivityName=".MainActivity" />
+        <activity android:name=".AddNewTreatment" android:parentActivityName=".PetData" />
     </application>
 
 </manifest>

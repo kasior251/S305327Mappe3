@@ -13,6 +13,7 @@ public class Pet {
     private String name;
     private String birthDate;
     private int type;
+    private double weight;
 
     public int getId() {
         return id;
@@ -50,18 +51,29 @@ public class Pet {
 
     }
 
-    public Pet(String name, String birthDate, int type) {
+    public Pet(String name, String birthDate, int type, double weight) {
 
         this.name = name;
         this.birthDate = birthDate;
         this.type = type;
+        this.weight = weight;
     }
 
-    public Pet(int id, String name, String birthDate, int type) {
+    public double getWeight() {
+        return weight;
+    }
+
+    public void setWeight(double weight) {
+        this.weight = weight;
+    }
+
+    public Pet(int id, String name, String birthDate, int type, double weight) {
 
         this.id = id;
         this.name = name;
         this.birthDate = birthDate;
         this.type = type;
+        this.weight = weight;
+
     }
 }

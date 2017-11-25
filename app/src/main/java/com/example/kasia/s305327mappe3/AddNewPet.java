@@ -32,6 +32,7 @@ public class AddNewPet extends AppCompatActivity implements DatePickerDialog.OnD
     DBHandler db;
     EditText petsName;
     Button birthDate;
+    EditText weight;
     RadioGroup radioButtons;
 
 
@@ -41,6 +42,7 @@ public class AddNewPet extends AppCompatActivity implements DatePickerDialog.OnD
         setContentView(R.layout.activity_add_new_pet);
         petsName = (EditText) findViewById(R.id.name);
         birthDate = (Button) findViewById(R.id.born);
+        weight = (EditText) findViewById(R.id.weight);
         db = new DBHandler(this);
         radioButtons = (RadioGroup)findViewById(R.id.radioGroup);
 
@@ -127,12 +129,26 @@ public class AddNewPet extends AppCompatActivity implements DatePickerDialog.OnD
             return;
         }
 
-        Pet pet = new Pet(name, bDate, idx);
+        //hent vekt
+        double petsWeight;
+        try {
+            petsWeight = Double.parseDouble(weight.getText().toString().trim());
+        }
+        catch (NumberFormatException e) {
+            //dersom ingenting er skrevet inn - sett vkt til null
+            if (weight.getText().toString().length() == 0) {
+                petsWeight = 0;
+            } else {
+                Toast.makeText(getApplicationContext(), "Wrong weight format. Use coma as a separator", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        }
+
+
+        Pet pet = new Pet(name, bDate, idx, petsWeight);
         db.addPet(pet);
-        Log.d("SQL", "Pet added");
-        petsName.setText("");
-        birthDate.setText("SET DATE");
-        radioButtons.clearCheck();
+        Toast.makeText(this, "Pet successfully added", Toast.LENGTH_SHORT).show();
+        finish();
 
     }
 

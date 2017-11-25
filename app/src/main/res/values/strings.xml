@@ -8,4 +8,15 @@
     <string name="name">Name: </string>
     <string name="born">Birth date: </string>
     <string name="choose_date">Set date</string>
+    <string name="add_treatment">New treatment</string>
+    <string name="treatment_name">Treatment: </string>
+    <string name="treatment_date">Date: </string>
+    <string name="next_treatment_date">Next treatment: </string>
+    <string name="submit">Save</string>
+    <string name="weight">Weight</string>
+    <string name="kg">kg</string>
+    <string name="update">Update</string>
+    <string name="no_data">No data</string>
+    <string name="new_weight">New weight: </string>
+    <string name="cancel">Cancel</string>
 </resources>

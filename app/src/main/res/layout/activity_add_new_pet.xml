@@ -8,7 +8,8 @@
     <TextView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:text="@string/add_header" />
+        android:text="@string/add_header"
+        style="@style/header"/>
     <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
@@ -95,11 +96,39 @@
 
     </LinearLayout>
 
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        style="@style/layout">
+
+        <TextView
+            android:layout_width="100dp"
+            android:layout_height="wrap_content"
+            android:text="@string/weight"
+            style="@style/label"/>
+
+        <EditText
+            android:id="@+id/weight"
+            android:layout_width="90dp"
+            android:layout_height="wrap_content"
+            style="@style/input"
+            android:background="@drawable/input"/>
+
+        <TextView
+            android:layout_width="40dp"
+            android:layout_height="wrap_content"
+            android:text="@string/kg"
+            style="@style/label"/>
+
+    </LinearLayout>
+
     <Button
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Submit"
+        android:text="@string/submit"
         android:onClick="savePet"
-        android:background="@drawable/button"/>
+        android:background="@drawable/button"
+        style="@style/submit_button" />
 
 </LinearLayout>
