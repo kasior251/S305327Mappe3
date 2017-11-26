@@ -12,6 +12,7 @@ import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -26,7 +27,13 @@ public class AddNewTreatment extends AppCompatActivity implements AdapterView.On
     EditText name;
     EditText nextTreatmentNr;
     int day, month, year, day1, month1, year1;
+    Date chosenDate;
+    Date nextTreatmentDate;
+    int timeUnit;
+    final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
 
+
+    //fortsette på metoden for å lagre behandling - formattere datoer og fortsette til dbHandler
     @Override
     protected void onCreate(Bundle savenInstanceState) {
         super.onCreate(savenInstanceState);
@@ -40,53 +47,115 @@ public class AddNewTreatment extends AppCompatActivity implements AdapterView.On
         nextTreatment.setAdapter(adapter);
         //koble til listener
         nextTreatment.setOnItemSelectedListener(this);
+        name = (EditText) findViewById(R.id.treatment_name);
+        nextTreatmentNr = (EditText) findViewById(R.id.next_treatment_number);
     }
 
     @Override
     public void onItemSelected(AdapterView<?> adapterView, View view, int i, long l) {
-        int days;
+        //holde tidsenhet valgt i variablelen timeUnit;
         switch (i) {
             case 1:
-                days = 1;
+                //enhet = dag
+                timeUnit = 1;
                 break;
             case 2:
-                days = 7;
+                //enhet = uke
+                timeUnit = 7;
                 break;
             case 3:
-                days = 30;
+                //enhet = måned, blir noe unøyaktig dersom antal måneder << 1
+                timeUnit = 30;
                 break;
             case 4:
-                days = 365;
+                //enhet = år
+                timeUnit = 365;
                 break;
             default:
-                days = 0;
+                timeUnit = 0;
         }
-
-
-        Toast.makeText(this, "Days " + days , Toast.LENGTH_SHORT).show();
     }
 
     @Override
     public void onNothingSelected(AdapterView<?> adapterView) {
-        //gjør ingenting, som default er det undefined
+        timeUnit = 0;
     }
 
     public void saveTreatment(View view) {
+        String treatmentName = name.getText().toString();
 
+        //sjekk om det er skrevet noe behandlingsnavn
+        if (treatmentName.length() == 0) {
+            Toast.makeText(this, "Treatment name can't be empty", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        //sjekk om datoen ble valgt
+        if (chosenDate == null) {
+            Toast.makeText(this, "Please choose date", Toast.LENGTH_SHORT).show();
+            return;
+        }
+
+        //sjekk om next treatment dato skal settes
+        String offset = nextTreatmentNr.getText().toString();
+        int dateOffset;
+        try {
+            dateOffset = Integer.parseInt(offset);
+        }
+        catch (NumberFormatException e) {
+            //sett til 0 dersom ugyldig input
+            dateOffset = 0;
+        }
+
+        //valgt tid enhet
+        if (timeUnit != 0) {
+            //skrevet inn gyldig tall i next treatment felt
+            if (dateOffset != 0) {
+                nextTreatmentDate = createNextTreatmentDate(chosenDate, dateOffset * timeUnit);
+                Toast.makeText(this, "New date: " + nextTreatmentDate.toString(), Toast.LENGTH_SHORT).show();
+            }
+            else {
+                //ugyldig input i next treatment felt
+                Toast.makeText(this, "Wrong number format in next treatment field", Toast.LENGTH_SHORT).show();
+                return;
+            }
+        } else if (dateOffset != 0) {  //valid tall skrevet i nextTreatment felt men ingen tid enhet valgt
+            Toast.makeText(this, "Choose time unit from drop down list", Toast.LENGTH_SHORT).show();
+            return;
+        }
+    }
+
+    private Date createNextTreatmentDate(Date date, int dayOffset) {
+        Toast.makeText(this, "passed day offset " + dayOffset, Toast.LENGTH_SHORT).show();
+        Calendar calendar = Calendar.getInstance();
+        calendar.setTime(date);
+        calendar.add(Calendar.DAY_OF_MONTH, dayOffset);
+        Date newDate = calendar.getTime();
+        Toast.makeText(this, "New date is" + newDate, Toast.LENGTH_SHORT).show();
+        return newDate;
     }
 
     public void chooseDate(View view) {
         final Calendar c = Calendar.getInstance();
 
-        year = year1;
-        month = month1-1;
-        day = day1;
-
-
+        year = c.get(Calendar.YEAR);
+        month = c.get(Calendar.MONTH);
+        day = c.get(Calendar.DAY_OF_MONTH);
 
         //vis datepicker for å velge behandlingsdato
         DatePickerDialog dialog = new DatePickerDialog(this, this, year, month, day);
         dialog.show();
+    }
+
+    //privat metode for å få ut dato format fra datePicker
+    private static Date getDateFromDatePicker(DatePicker datePicker) {
+        int day = datePicker.getDayOfMonth();
+        int month = datePicker.getMonth();
+        int year = datePicker.getYear();
+
+        Calendar calendar = Calendar.getInstance();
+        calendar.set(year, month, day);
+        return calendar.getTime();
     }
 
     @Override
@@ -95,7 +164,8 @@ public class AddNewTreatment extends AppCompatActivity implements AdapterView.On
         year1 = i;
         month1 = i1 + 1;
         day1 = i2;
-        Date chosenDate = new Date();
+        chosenDate = getDateFromDatePicker(datePicker);
+        Toast.makeText(this, "Chosen date" + chosenDate.toString(), Toast.LENGTH_SHORT).show();
         //sjekke hvis valgt dato ikke ligger i fremtiden, hvis ja gi feilmld
         if (i > year) {
             dateValid = false;
