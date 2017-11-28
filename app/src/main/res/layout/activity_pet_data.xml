@@ -4,52 +4,69 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical">
-
-    <ImageView
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:src="@drawable/paw"
-        android:id="@+id/pet_icon"
-        android:layout_gravity="center"
-        android:layout_margin="20sp"
-        android:padding="10sp"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         android:orientation="horizontal">
-        <TextView
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:text="@string/name"
-            style="@style/label"/>
-        <TextView
+
+        <ImageView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/pet_name"
-            style="@style/label"/>
+            android:src="@drawable/paw"
+            android:id="@+id/pet_icon"
+            android:layout_gravity="center"
+            android:layout_margin="5sp"
+            android:padding="5sp"/>
+
+        <LinearLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="vertical">
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                style="@style/layout">
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/name"
+                    style="@style/label"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/pet_name"
+                    style="@style/label"/>
+            </LinearLayout>
+
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                style="@style/layout">
+                <TextView
+                    android:layout_width="80dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/born"
+                    style="@style/label"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/pet_birth_date"
+                    style="@style/label"/>
+            </LinearLayout>
+
+        </LinearLayout>
+
+
     </LinearLayout>
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:orientation="horizontal">
-        <TextView
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:text="@string/born"
-            style="@style/label"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/pet_birth_date"
-            style="@style/label"/>
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal">
+        android:orientation="horizontal"
+        style="@style/layout">
         <TextView
             android:layout_width="100dp"
             android:layout_height="wrap_content"
@@ -66,6 +83,13 @@
             android:layout_height="wrap_content"
             android:text="@string/update"
             android:onClick="updateWeight"/>
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/delete"
+            android:onClick="deletePet"
+            style="@style/Base.Widget.AppCompat.Button.Colored"
+            android:background="@android:color/holo_red_light"/>
     </LinearLayout>
 
     <Button
@@ -75,6 +99,45 @@
         android:onClick="addNewTreatment"
         android:background="@drawable/button"
         style="@style/submit_button"/>
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        style="@style/layout"
+        android:orientation="horizontal">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/show_recent_treatments"
+            android:onClick="showRecentTreatments"
+            android:background="@drawable/button"
+            style="@style/submit_button"/>
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/show_coming_treatments"
+            android:onClick="showDueTreatments"
+            android:background="@drawable/button"
+            style="@style/submit_button"/>
+
+    </LinearLayout>
+
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:id="@+id/list"
+            android:layout_gravity="center_horizontal">
+
+        </LinearLayout>
+
+    </ScrollView>
 
 
 </LinearLayout>

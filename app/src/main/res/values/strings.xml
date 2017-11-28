@@ -6,7 +6,7 @@
     <string name="cat">cat</string>
     <string name="dog">dog</string>
     <string name="name">Name: </string>
-    <string name="born">Birth date: </string>
+    <string name="born">Born: </string>
     <string name="choose_date">Set date</string>
     <string name="add_treatment">New treatment</string>
     <string name="treatment_name">Treatment: </string>
@@ -19,4 +19,9 @@
     <string name="no_data">No data</string>
     <string name="new_weight">New weight: </string>
     <string name="cancel">Cancel</string>
+    <string name="show_coming_treatments">Due treatments</string>
+    <string name="show_recent_treatments">Recent treatments</string>
+    <string name="delete">Delete</string>
+    <string name="confirm">Are you sure</string>
+    <string name="yes">Yes</string>
 </resources>

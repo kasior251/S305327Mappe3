@@ -8,12 +8,12 @@ public class Treatment {
 
     private int id;
     private Pet pet;
-    private int name;
+    private String name;
     private String treatmentDate;
     private String nextTreatment;
 
     //konstruktører
-    public Treatment(int id, Pet pet, int name, String treatmentDate, String nextTreatment) {
+    public Treatment(int id, Pet pet, String name, String treatmentDate, String nextTreatment) {
         this.id = id;
         this.pet = pet;
         this.name = name;
@@ -21,19 +21,23 @@ public class Treatment {
         this.nextTreatment = nextTreatment;
     }
 
-    public Treatment(int name, String treatmentDate, String nextTreatment) {
+    public Treatment(String name, String treatmentDate, String nextTreatment) {
 
         this.name = name;
         this.treatmentDate = treatmentDate;
         this.nextTreatment = nextTreatment;
     }
 
-    public Treatment(Pet pet, int name, String treatmentDate, String nextTreatment) {
+    public Treatment(Pet pet, String name, String treatmentDate, String nextTreatment) {
 
         this.pet = pet;
         this.name = name;
         this.treatmentDate = treatmentDate;
         this.nextTreatment = nextTreatment;
+    }
+
+    public Treatment() {
+
     }
     //konstruktører slutt
 
@@ -55,11 +59,11 @@ public class Treatment {
         this.pet = pet;
     }
 
-    public int getName() {
+    public String getName() {
         return name;
     }
 
-    public void setName(int name) {
+    public void setName(String name) {
         this.name = name;
     }
 

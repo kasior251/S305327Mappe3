@@ -51,6 +51,10 @@ public class Pet {
 
     }
 
+    public Pet(int id) {
+        this.id = id;
+    }
+
     public Pet(String name, String birthDate, int type, double weight) {
 
         this.name = name;

@@ -30,10 +30,11 @@ public class AddNewTreatment extends AppCompatActivity implements AdapterView.On
     Date chosenDate;
     Date nextTreatmentDate;
     int timeUnit;
-    final SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+    final SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+    int petId;
+    DBHandler db;
 
 
-    //fortsette på metoden for å lagre behandling - formattere datoer og fortsette til dbHandler
     @Override
     protected void onCreate(Bundle savenInstanceState) {
         super.onCreate(savenInstanceState);
@@ -45,7 +46,8 @@ public class AddNewTreatment extends AppCompatActivity implements AdapterView.On
                 R.array.next_treatment_period, R.layout.spinner_item);
         adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         nextTreatment.setAdapter(adapter);
-        //koble til listener
+        db = new DBHandler(this);
+        petId = getIntent().getIntExtra("ID", 0);
         nextTreatment.setOnItemSelectedListener(this);
         name = (EditText) findViewById(R.id.treatment_name);
         nextTreatmentNr = (EditText) findViewById(R.id.next_treatment_number);
@@ -123,6 +125,19 @@ public class AddNewTreatment extends AppCompatActivity implements AdapterView.On
             Toast.makeText(this, "Choose time unit from drop down list", Toast.LENGTH_SHORT).show();
             return;
         }
+
+        //alt gikk bra, kan lagre behandlignen til databasen
+        String tDate = sdf.format(chosenDate);
+        String nDate;
+        if (nextTreatmentDate != null) {
+            nDate = sdf.format(nextTreatmentDate);
+        } else {
+            nDate = null;
+        }
+        Pet pet = new Pet(petId);
+        Treatment treatment = new Treatment(pet, treatmentName, tDate, nDate);
+        db.addTreatment(treatment);
+        finish();
     }
 
     private Date createNextTreatmentDate(Date date, int dayOffset) {

@@ -98,7 +98,7 @@ public class AddNewPet extends AppCompatActivity implements DatePickerDialog.OnD
 
         if (dateValid) {
             //dato er valid - OK
-            birthDate.setText(day1 + "/" + month1 + "/" + year1);
+            birthDate.setText(year1 + "/" + month1 + "/" + day1);
         } else {
             //dato er ikke valid - vis feilmld
             birthDate.setText("SET DATE");
