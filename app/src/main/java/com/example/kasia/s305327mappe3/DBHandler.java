@@ -133,8 +133,16 @@ public class DBHandler extends SQLiteOpenHelper {
         return getTreatments(selectQuery, db);
     }
 
+    //finn behandlinger som er registrert med petId
     public List<Treatment> findDueTreatments(int petId) {
-        String selectQuery = "SELECT * FROM " + TABLE_TREATMENTS + " WHERE " + KEY_PET  +" = " + petId + " AND " + KEY_NEXT_TREATMENT  + " NOT NULL " + " ORDER BY " + KEY_NEXT_TREATMENT + " DESC";
+        String selectQuery = "SELECT * FROM " + TABLE_TREATMENTS + " WHERE " + KEY_PET  +" = " + petId + " AND " + KEY_NEXT_TREATMENT  + " NOT NULL " + " ORDER BY " + KEY_NEXT_TREATMENT + " ASC";
+        SQLiteDatabase db = this.getWritableDatabase();
+        return getTreatments(selectQuery, db);
+    }
+
+    //finn alle planlagte behandlinger
+    public List<Treatment> findDueTreatments() {
+        String selectQuery = "SELECT * FROM " + TABLE_TREATMENTS + " WHERE " + KEY_NEXT_TREATMENT  + " NOT NULL " + " ORDER BY " + KEY_NEXT_TREATMENT + " ASC";
         SQLiteDatabase db = this.getWritableDatabase();
         return getTreatments(selectQuery, db);
     }

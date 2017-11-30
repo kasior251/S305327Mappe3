@@ -19,7 +19,10 @@ import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Calendar;
+import java.util.Date;
 import java.util.List;
 
 import static java.security.AccessController.getContext;
@@ -42,6 +45,7 @@ public class PetData extends AppCompatActivity {
     int id;
     int type;
     LinearLayout treatmentView;
+    final SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -70,6 +74,8 @@ public class PetData extends AppCompatActivity {
             String weightToShow = Double.toString(petsWeight) + " kg";
             weight.setText(weightToShow);
         }
+        treatmentView = (LinearLayout) findViewById(R.id.list);
+        treatmentView.removeAllViews();
     }
 
     //metode for å registrere ny behandling på dyret
@@ -128,7 +134,6 @@ public class PetData extends AppCompatActivity {
     public void showRecentTreatments(View view) {
         List<Treatment> treatments = db.findGivenTreatments(id);
 
-        treatmentView = (LinearLayout) findViewById(R.id.list);
         treatmentView.removeAllViews();
 
         List<LinearLayout> layouts = new ArrayList<>();
@@ -143,7 +148,7 @@ public class PetData extends AppCompatActivity {
             //name
             TextView name = new TextView(this);
             name.setTextSize(20);
-            name.setWidth(250);
+            name.setWidth(350);
             name.setMaxLines(1);
             name.setText(t.getName());
             row.addView(name, params);
@@ -184,10 +189,9 @@ public class PetData extends AppCompatActivity {
         //list planlagte behandlinger
     public void showDueTreatments(View view) {
         List<Treatment> treatments = db.findDueTreatments(id);
-
-        treatmentView = (LinearLayout) findViewById(R.id.list);
         treatmentView.removeAllViews();
 
+        //endre tekst til rødt når datoen er innen 3 dager eller noe
         for (Treatment t: treatments) {
             LinearLayout row = new LinearLayout(this);
             row.setOrientation(LinearLayout.HORIZONTAL);
@@ -210,6 +214,16 @@ public class PetData extends AppCompatActivity {
             date.setWidth(300);
             date.setMaxLines(1);
             date.setText(t.getNextTreatment());
+            //sjekk om dato for neste behandling har passert (eller er i dag), hvis ja, vis dato i rødt
+            if (checkDueDate(t.getNextTreatment()) > 0) {
+                date.setTextColor(Color.RED);
+                name.setTextColor(Color.RED);
+            }
+            //sjekk om det er noen behandlinger planlagt for i dag, hvis ja - vis dem i gult
+            else if (checkDueDate(t.getNextTreatment())  == 0) {
+                date.setTextColor(Color.YELLOW);
+                name.setTextColor(Color.YELLOW);
+            }
             row.addView(date, params);
 
             //button
@@ -248,6 +262,12 @@ public class PetData extends AppCompatActivity {
     public void delete(View view) {
         db.deletePet(id);
         finish();
+    }
+
+    private int checkDueDate(String date) {
+        String today = sdf.format(Calendar.getInstance().getTime());
+        Toast.makeText(this, "date " + date + " number " + today.compareTo(date), Toast.LENGTH_SHORT).show();
+        return today.compareTo(date);
     }
 
 }

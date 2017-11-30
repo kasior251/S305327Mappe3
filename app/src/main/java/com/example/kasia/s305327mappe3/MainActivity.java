@@ -31,6 +31,9 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
         setSupportActionBar(toolbar);
         db = new DBHandler(this);
         showAllPets();
+        Intent intent = new Intent();
+        intent.setAction("com.example.kasia.s305327mappe3.mybroadcast");
+        sendBroadcast(intent);
     }
 
     @Override

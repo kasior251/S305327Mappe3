@@ -9,6 +9,12 @@
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
+        <receiver android:name=".MyBroadcastReceiver">
+            <intent-filter>
+                <action android:name="com.example.kasia.s305327mappe3.mybroadcast" />
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+            </intent-filter>
+        </receiver>
         <activity android:name=".MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
@@ -19,6 +25,8 @@
         <activity android:name=".AddNewPet" android:parentActivityName=".MainActivity" />
         <activity android:name=".PetData" android:parentActivityName=".MainActivity" />
         <activity android:name=".AddNewTreatment" android:parentActivityName=".PetData" />
+        <service android:name=".CheckDueTreatments"></service>
+        <service android:name=".MyService"></service>
     </application>
 
 </manifest>
