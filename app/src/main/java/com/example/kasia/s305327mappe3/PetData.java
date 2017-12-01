@@ -6,7 +6,7 @@ import android.graphics.Color;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
-import android.view.Gravity;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
@@ -14,8 +14,6 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
-import android.widget.TableLayout;
-import android.widget.TableRow;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -68,14 +66,20 @@ public class PetData extends AppCompatActivity {
         birth.setText(getIntent().getStringExtra("BIRTH"));
         weight = (TextView)findViewById(R.id.weight);
         double petsWeight = (getIntent().getDoubleExtra("WEIGHT", 0));
-        Toast.makeText(this, "weight " + petsWeight, Toast.LENGTH_SHORT).show();
+        Log.d("DATA", "weight" + petsWeight);
         //sett bare dersom vekt ikke er 0
         if (petsWeight != 0) {
             String weightToShow = Double.toString(petsWeight) + " kg";
             weight.setText(weightToShow);
         }
-        treatmentView = (LinearLayout) findViewById(R.id.list);
-        treatmentView.removeAllViews();
+    }
+
+    @Override
+    protected void onResume() {
+        if (treatmentView != null) {
+            treatmentView.removeAllViews();
+        }
+        super.onResume();
     }
 
     //metode for å registrere ny behandling på dyret
@@ -134,9 +138,15 @@ public class PetData extends AppCompatActivity {
     public void showRecentTreatments(View view) {
         List<Treatment> treatments = db.findGivenTreatments(id);
 
+        treatmentView = (LinearLayout) findViewById(R.id.list);
         treatmentView.removeAllViews();
 
-        List<LinearLayout> layouts = new ArrayList<>();
+        if (treatments.isEmpty()) {
+            TextView tv = new TextView(this);
+            tv.setGravity(View.TEXT_ALIGNMENT_GRAVITY);
+            tv.setText(getString(R.string.no_treatments));
+            treatmentView.addView(tv); }
+
         for (Treatment t: treatments) {
             LinearLayout row = new LinearLayout(this);
             row.setOrientation(LinearLayout.HORIZONTAL);
@@ -172,15 +182,13 @@ public class PetData extends AppCompatActivity {
 
             btn.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
-                    Toast.makeText(view.getContext(),
-                            "Button clicked index = " + id_, Toast.LENGTH_SHORT)
-                            .show();
                     deleteTreatment(id_);
                 }
             });
         }
     }
 
+    //metoden som fjerner behandling og oppdaterer viewet
     private void deleteTreatment(int id) {
         db.deleteTreatment(id);
         showRecentTreatments(treatmentView);
@@ -189,9 +197,16 @@ public class PetData extends AppCompatActivity {
         //list planlagte behandlinger
     public void showDueTreatments(View view) {
         List<Treatment> treatments = db.findDueTreatments(id);
+        treatmentView = (LinearLayout) findViewById(R.id.list);
         treatmentView.removeAllViews();
 
-        //endre tekst til rødt når datoen er innen 3 dager eller noe
+        //gi info på skjerm hvis ingen behandlinger ble funnet
+        if (treatments.isEmpty()) {
+            TextView tv = new TextView(this);
+            tv.setGravity(View.TEXT_ALIGNMENT_GRAVITY);
+            tv.setText(getString(R.string.no_coming_treatments));
+            treatmentView.addView(tv); }
+
         for (Treatment t: treatments) {
             LinearLayout row = new LinearLayout(this);
             row.setOrientation(LinearLayout.HORIZONTAL);
@@ -203,7 +218,7 @@ public class PetData extends AppCompatActivity {
             //name
             TextView name = new TextView(this);
             name.setTextSize(20);
-            name.setWidth(250);
+            name.setWidth(350);
             name.setMaxLines(1);
             name.setText(t.getName());
             row.addView(name, params);
@@ -237,15 +252,14 @@ public class PetData extends AppCompatActivity {
 
             btn.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
-                    Toast.makeText(view.getContext(),
-                            "Button clicked index = " + id_, Toast.LENGTH_SHORT)
-                            .show();
                     deleteNextTreatmentDate(id_);
+                    Toast.makeText(PetData.this, "Treatment deleted from list of due treatments", Toast.LENGTH_SHORT).show();
                 }
             });
         }
     }
 
+    //metoden som fjerner dato av neste behandling og oppdaterer viewet
     private void deleteNextTreatmentDate(int id) {
         db.deleteTreatmentNextDate(id);
         showDueTreatments(treatmentView);
@@ -261,12 +275,13 @@ public class PetData extends AppCompatActivity {
 
     public void delete(View view) {
         db.deletePet(id);
+        Toast.makeText(getApplicationContext(), "Pet successfully deleted!", Toast.LENGTH_SHORT).show();
         finish();
     }
 
     private int checkDueDate(String date) {
         String today = sdf.format(Calendar.getInstance().getTime());
-        Toast.makeText(this, "date " + date + " number " + today.compareTo(date), Toast.LENGTH_SHORT).show();
+        Log.d("DATA ", date + " number " + today.compareTo(date));
         return today.compareTo(date);
     }
 

@@ -26,7 +26,7 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="delete"
+            android:onClick="deleteTreatment"
             android:text="@string/yes"
             android:background="@drawable/button_danger"
             style="@style/submit_button"/>

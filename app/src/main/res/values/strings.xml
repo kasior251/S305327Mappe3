@@ -22,6 +22,11 @@
     <string name="show_coming_treatments">Due treatments</string>
     <string name="show_recent_treatments">Recent treatments</string>
     <string name="delete">Delete</string>
-    <string name="confirm">Are you sure</string>
+    <string name="confirm">Are you sure?</string>
     <string name="yes">Yes</string>
+    <string name="push_title">Push Notifications</string>
+    <string name="push_info">Allow/deny push notifications</string>
+    <string name="no_treatments">No treatments found</string>
+    <string name="no_coming_treatments">No coming treatments</string>
+    <string name="ok">OK</string>
 </resources>

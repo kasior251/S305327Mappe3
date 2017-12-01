@@ -23,6 +23,17 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
     LinearLayout list;
     DBHandler db;
 
+    //tillate push varsler, false - nei, true -ja
+    private static boolean push = true;
+
+    public static void setPush(boolean setValue) {
+        push = setValue;
+    }
+
+    public static boolean getPush() {
+        return push;
+    }
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -52,12 +63,14 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
     @Override
     public boolean onOptionsItemSelected(MenuItem item) {
         //handle actionbar klikk her
+        Intent intent;
         switch (item.getItemId()) {
             case R.id.action_settings:
-                //code for settings
+                intent = new Intent(getApplicationContext(), ShowPreferences.class);
+                startActivity(intent);
                 break;
             case R.id.action_add:
-                Intent intent = new Intent(this, AddNewPet.class);
+                intent = new Intent(this, AddNewPet.class);
                 startActivity(intent);
                 break;
             default:

@@ -23,8 +23,11 @@
             </intent-filter>
         </activity>
         <activity android:name=".AddNewPet" android:parentActivityName=".MainActivity" />
-        <activity android:name=".PetData" android:parentActivityName=".MainActivity" />
-        <activity android:name=".AddNewTreatment" android:parentActivityName=".PetData" />
+        <activity android:name=".ShowPreferences" android:parentActivityName=".MainActivity"
+            android:configChanges="orientation|screenSize"/>
+        <activity android:name=".PetData" android:parentActivityName=".MainActivity"/>
+        <activity android:name=".AddNewTreatment" android:parentActivityName=".PetData"
+            android:configChanges="orientation|screenSize"/>
         <service android:name=".CheckDueTreatments"></service>
         <service android:name=".MyService"></service>
     </application>

@@ -1,24 +1,14 @@
 package com.example.kasia.s305327mappe3;
 
-import android.annotation.SuppressLint;
 import android.app.DatePickerDialog;
-import android.app.Dialog;
-import android.app.DialogFragment;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
-import android.util.Log;
 import android.view.View;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.RadioButton;
 import android.widget.RadioGroup;
-import android.widget.TextView;
 import android.widget.Toast;
-
-import java.text.DateFormat;
-import java.text.ParseException;
-import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 
@@ -26,7 +16,7 @@ import java.util.Date;
  * Created by Kasia on 09.11.2017.
  */
 
-public class AddNewPet extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
+public class AddNewPet extends AppCompatActivity implements DatePickerDialog.OnDateSetListener, ErrorDialog.DialogClickListener {
 
     int day, month, year, day1, month1, year1;
     DBHandler db;
@@ -34,6 +24,7 @@ public class AddNewPet extends AppCompatActivity implements DatePickerDialog.OnD
     Button birthDate;
     EditText weight;
     RadioGroup radioButtons;
+    ErrorDialog dialog;
 
 
     @Override
@@ -102,7 +93,7 @@ public class AddNewPet extends AppCompatActivity implements DatePickerDialog.OnD
         } else {
             //dato er ikke valid - vis feilmld
             birthDate.setText("SET DATE");
-            Toast.makeText(getApplicationContext(), "You can't choose a future date", Toast.LENGTH_SHORT).show();
+            showError("DATE ERROR!", "You can't choose a future date");
         }
 
     }
@@ -114,18 +105,18 @@ public class AddNewPet extends AppCompatActivity implements DatePickerDialog.OnD
         int idx = radioButtons.indexOfChild(radioButton);
         //sjekk om type av kjæledyr ble valgt
         if (idx < 0) {
-            Toast.makeText(getApplicationContext(), "Choose type", Toast.LENGTH_SHORT).show();
+            showError("ERROR!", "Choose kind of animal");
             return;
         }
         String name = petsName.getText().toString();
         if (name.equals("")) {
-            Toast.makeText(getApplicationContext(), "Name cannot be empty", Toast.LENGTH_SHORT).show();
+            showError("NAME MISSING!", "Name can't be empty");
             return;
         }
 
         String bDate = birthDate.getText().toString();
         if (bDate.toLowerCase().equals("set date")) {
-            Toast.makeText(getApplicationContext(), "Choose date", Toast.LENGTH_SHORT).show();
+            showError("DATE ERROR!", "Choose date");
             return;
         }
 
@@ -139,19 +130,26 @@ public class AddNewPet extends AppCompatActivity implements DatePickerDialog.OnD
             if (weight.getText().toString().length() == 0) {
                 petsWeight = 0;
             } else {
-                Toast.makeText(getApplicationContext(), "Wrong weight format. Use coma as a separator", Toast.LENGTH_SHORT).show();
+                showError("WEIGHT ERROR!", "Use dot as a separator");
+                weight.setText("");
                 return;
             }
         }
-
 
         Pet pet = new Pet(name, bDate, idx, petsWeight);
         db.addPet(pet);
         Toast.makeText(this, "Pet successfully added", Toast.LENGTH_SHORT).show();
         finish();
-
     }
 
+    private void showError(String title, String message ) {
+        dialog = ErrorDialog.newInstance(title, message, (int) R.layout.activity_add_new_pet);
+        dialog.show(getSupportFragmentManager(), "");
+    }
+    @Override
+    public void exit() {
+        dialog.dismiss();
+    }
 }
 
 

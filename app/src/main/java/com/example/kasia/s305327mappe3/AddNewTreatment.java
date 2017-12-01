@@ -1,8 +1,10 @@
 package com.example.kasia.s305327mappe3;
 
 import android.app.DatePickerDialog;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
+import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -20,7 +22,7 @@ import java.util.Date;
  * Created by Kasia on 24.11.2017.
  */
 
-public class AddNewTreatment extends AppCompatActivity implements AdapterView.OnItemSelectedListener, DatePickerDialog.OnDateSetListener {
+public class AddNewTreatment extends AppCompatActivity implements AdapterView.OnItemSelectedListener, DatePickerDialog.OnDateSetListener, ErrorDialog.DialogClickListener {
 
     Spinner nextTreatment;
     Button treatmentDate;
@@ -33,6 +35,7 @@ public class AddNewTreatment extends AppCompatActivity implements AdapterView.On
     final SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
     int petId;
     DBHandler db;
+    ErrorDialog dialog;
 
 
     @Override
@@ -88,13 +91,13 @@ public class AddNewTreatment extends AppCompatActivity implements AdapterView.On
 
         //sjekk om det er skrevet noe behandlingsnavn
         if (treatmentName.length() == 0) {
-            Toast.makeText(this, "Treatment name can't be empty", Toast.LENGTH_SHORT).show();
+            showError("MISSING TREATMENT NAME", "Name can't be empty");
             return;
         }
 
         //sjekk om datoen ble valgt
         if (chosenDate == null) {
-            Toast.makeText(this, "Please choose date", Toast.LENGTH_SHORT).show();
+            showError("DATE ERROR!", "Choose date");
             return;
         }
 
@@ -114,15 +117,15 @@ public class AddNewTreatment extends AppCompatActivity implements AdapterView.On
             //skrevet inn gyldig tall i next treatment felt
             if (dateOffset != 0) {
                 nextTreatmentDate = createNextTreatmentDate(chosenDate, dateOffset * timeUnit);
-                Toast.makeText(this, "New date: " + nextTreatmentDate.toString(), Toast.LENGTH_SHORT).show();
+                Log.d("DATA", "next treatment date" + nextTreatmentDate);
             }
             else {
                 //ugyldig input i next treatment felt
-                Toast.makeText(this, "Wrong number format in next treatment field", Toast.LENGTH_SHORT).show();
+                showError("NOT A NUMBER!", "Next treatment field containts not allowed characters");
                 return;
             }
         } else if (dateOffset != 0) {  //valid tall skrevet i nextTreatment felt men ingen tid enhet valgt
-            Toast.makeText(this, "Choose time unit from drop down list", Toast.LENGTH_SHORT).show();
+            showError("ERROR", "Choose time unit from the drop-down list");
             return;
         }
 
@@ -137,16 +140,16 @@ public class AddNewTreatment extends AppCompatActivity implements AdapterView.On
         Pet pet = new Pet(petId);
         Treatment treatment = new Treatment(pet, treatmentName, tDate, nDate);
         db.addTreatment(treatment);
+        Toast.makeText(getApplicationContext(), "Treatment sccessfully added!", Toast.LENGTH_SHORT).show();
         finish();
     }
 
     private Date createNextTreatmentDate(Date date, int dayOffset) {
-        Toast.makeText(this, "passed day offset " + dayOffset, Toast.LENGTH_SHORT).show();
+        Log.d("DATA", "day offset " + dayOffset);
         Calendar calendar = Calendar.getInstance();
         calendar.setTime(date);
         calendar.add(Calendar.DAY_OF_MONTH, dayOffset);
         Date newDate = calendar.getTime();
-        Toast.makeText(this, "New date is" + newDate, Toast.LENGTH_SHORT).show();
         return newDate;
     }
 
@@ -180,7 +183,7 @@ public class AddNewTreatment extends AppCompatActivity implements AdapterView.On
         month1 = i1 + 1;
         day1 = i2;
         chosenDate = getDateFromDatePicker(datePicker);
-        Toast.makeText(this, "Chosen date" + chosenDate.toString(), Toast.LENGTH_SHORT).show();
+        Log.d("DATA", "Chosen date " + chosenDate);
         //sjekke hvis valgt dato ikke ligger i fremtiden, hvis ja gi feilmld
         if (i > year) {
             dateValid = false;
@@ -207,7 +210,18 @@ public class AddNewTreatment extends AppCompatActivity implements AdapterView.On
         } else {
             //dato er ikke valid - vis feilmld
             treatmentDate.setText(getString(R.string.choose_date));
-            Toast.makeText(getApplicationContext(), "You can't choose a future date", Toast.LENGTH_SHORT).show();
+            showError("DATE ERROR!", "You can't choose a future date");
         }
+    }
+
+    private void showError(String title, String message ) {
+        dialog = ErrorDialog.newInstance(title, message, (int) R.layout.activity_add_new_treatment);
+        dialog.show(getSupportFragmentManager(), "");
+    }
+
+
+    @Override
+    public void exit() {
+        dialog.dismiss();
     }
 }

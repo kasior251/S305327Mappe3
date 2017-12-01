@@ -6,16 +6,22 @@
 
     <LinearLayout
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:padding="10dp">
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/new_weight"/>
+            android:text="@string/new_weight"
+            style="@style/label"/>
         <EditText
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:id="@+id/new_weight"/>
+            android:id="@+id/new_weight"
+            android:background="@drawable/input"
+            style="@style/input"
+            android:minWidth="50dp"
+            android:maxWidth="50dp"/>
 
     </LinearLayout>
 
@@ -26,16 +32,19 @@
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:onClick="saveNewWeight"
-            android:text="@string/update"
-            style="@style/Base.Widget.AppCompat.Button"/>
+            android:text="@string/cancel"
+            android:onClick="cancel"
+            style="@style/submit_button"
+            android:background="@drawable/button_danger"/>
 
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/cancel"
-            android:onClick="cancel"
-            style="@style/Base.Widget.AppCompat.Button"/>
+            android:onClick="saveNewWeight"
+            android:text="@string/update"
+            style="@style/submit_button"
+            android:background="@drawable/button"/>
+
     </LinearLayout>
 
 

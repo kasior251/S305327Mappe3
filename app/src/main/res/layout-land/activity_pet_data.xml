@@ -23,14 +23,6 @@
                 android:layout_margin="5sp"
                 android:padding="5sp"/>
 
-            <Button
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:text="@string/delete"
-                android:layout_gravity="center"
-                android:onClick="deletePet"
-                style="@style/submit_button"
-                android:background="@drawable/button_danger"/>
         </LinearLayout>
 
         <LinearLayout
@@ -72,52 +64,62 @@
                     style="@style/label"/>
             </LinearLayout>
 
+            <LinearLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                style="@style/layout">
+                <TextView
+                    android:layout_width="100dp"
+                    android:layout_height="wrap_content"
+                    android:text="@string/weight"
+                    style="@style/label"/>
+                <TextView
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/weight"
+                    android:text="@string/no_data"
+                    style="@style/label"/>
+                <Button
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/update"
+                    android:onClick="updateWeight"
+                    style="@style/Widget.AppCompat.Button.Small"
+                    android:maxWidth="80dp"
+                    android:maxHeight="10dp"
+                    android:background="@drawable/button"/>
+            </LinearLayout>
 
         </LinearLayout>
-
-
-    </LinearLayout>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:orientation="horizontal"
-        style="@style/layout">
-        <TextView
-            android:layout_width="100dp"
-            android:layout_height="wrap_content"
-            android:text="@string/weight"
-            style="@style/label"/>
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:id="@+id/weight"
-            android:text="@string/no_data"
-            style="@style/label"/>
         <Button
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="@string/update"
-            android:onClick="updateWeight"
-            style="@style/Widget.AppCompat.Button.Small"
-            android:maxWidth="80dp"
-            android:maxHeight="10dp"
-            android:background="@drawable/button"/>
+            android:layout_gravity="center_vertical"
+            android:layout_margin="30dp"
+            android:minHeight="60dp"
+            android:minWidth="120dp"
+            android:text="@string/delete"
+            android:onClick="deletePet"
+            style="@style/submit_button"
+            android:background="@drawable/button_danger"/>
+
     </LinearLayout>
 
-    <Button
+    <LinearLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="@string/add_treatment"
-        android:onClick="addNewTreatment"
-        android:background="@drawable/button"
-        style="@style/submit_button"/>
-
-    <LinearLayout
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
         style="@style/layout"
+        android:layout_gravity="center_horizontal"
         android:orientation="horizontal">
+
+        <Button
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/add_treatment"
+            android:onClick="addNewTreatment"
+            android:background="@drawable/button"
+            style="@style/submit_button"/>
 
         <Button
             android:layout_width="wrap_content"
@@ -138,13 +140,13 @@
     </LinearLayout>
 
     <ScrollView
-        android:layout_width="match_parent"
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:padding="10dp"
         android:layout_gravity="center_horizontal">
 
         <LinearLayout
-            android:layout_width="wrap_content"
+            android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:orientation="vertical"
             android:id="@+id/list"

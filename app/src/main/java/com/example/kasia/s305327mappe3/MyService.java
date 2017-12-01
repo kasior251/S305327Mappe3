@@ -31,6 +31,7 @@ public class MyService extends Service {
         PendingIntent pIntent = PendingIntent.getService(this, 0, i, 0);
         AlarmManager alarm = (AlarmManager)getSystemService(Context.ALARM_SERVICE);
         alarm.setInexactRepeating(AlarmManager.RTC_WAKEUP, calendar.getTimeInMillis(), 60 * 1000, pIntent);
+
         return super.onStartCommand(intent, flags, startId);
     }
 }
