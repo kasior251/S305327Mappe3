@@ -22,15 +22,16 @@ public class ShowPreferences extends AppCompatActivity {
 
     public static class PrefsFragment extends PreferenceFragment {
 
-        CheckBoxPreference checkBoxPreference;
+        CheckBoxPreference pushPreference;
+        CheckBoxPreference soundPreference;
 
         @Override
         public void onCreate(Bundle savedInstanceState) {
             super.onCreate(savedInstanceState);
             addPreferencesFromResource(R.xml.preferences);
-            checkBoxPreference = (CheckBoxPreference) findPreference("checkbox_preference");
+            pushPreference = (CheckBoxPreference) findPreference("push_preference");
 
-            checkBoxPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+            pushPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
                 @Override
                 public boolean onPreferenceChange(Preference preference, Object o) {
 
@@ -41,6 +42,25 @@ public class ShowPreferences extends AppCompatActivity {
                     }
                     else {
                         MainActivity.setPush(false);
+                        Toast.makeText(getContext(), "The value is " + MainActivity.getPush(), Toast.LENGTH_SHORT).show();
+                    }
+                    return true;
+                }
+            });
+
+            soundPreference = (CheckBoxPreference) findPreference("sound_preference");
+
+            soundPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
+                @Override
+                public boolean onPreferenceChange(Preference preference, Object o) {
+
+                    if (o.toString().equals("true")) {
+                        MainActivity.setSound(true);
+                        Toast.makeText(getContext(), "The value is " + MainActivity.getPush(), Toast.LENGTH_SHORT).show();
+
+                    }
+                    else {
+                        MainActivity.setSound(false);
                         Toast.makeText(getContext(), "The value is " + MainActivity.getPush(), Toast.LENGTH_SHORT).show();
                     }
                     return true;

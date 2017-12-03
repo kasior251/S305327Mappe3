@@ -36,6 +36,7 @@ public class AddNewTreatment extends AppCompatActivity implements AdapterView.On
     int petId;
     DBHandler db;
     ErrorDialog dialog;
+    boolean dateValid;
 
 
     @Override
@@ -138,7 +139,16 @@ public class AddNewTreatment extends AppCompatActivity implements AdapterView.On
             nDate = null;
         }
         Pet pet = new Pet(petId);
-        Treatment treatment = new Treatment(pet, treatmentName, tDate, nDate);
+        Treatment treatment;
+        //registreres behandling i fortiden
+        if (dateValid) {
+            treatment = new Treatment(pet, treatmentName, tDate, nDate);
+        } else {
+            //her "treatment date" blir til "next treatment date" og treatment date blir til null
+            //må legge til datePicker her
+            treatment = new Treatment(pet, treatmentName, null, tDate);
+        }
+
         db.addTreatment(treatment);
         Toast.makeText(getApplicationContext(), "Treatment sccessfully added!", Toast.LENGTH_SHORT).show();
         finish();
@@ -178,7 +188,6 @@ public class AddNewTreatment extends AppCompatActivity implements AdapterView.On
 
     @Override
     public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
-        boolean dateValid;
         year1 = i;
         month1 = i1 + 1;
         day1 = i2;
@@ -204,14 +213,21 @@ public class AddNewTreatment extends AppCompatActivity implements AdapterView.On
             dateValid = true;
         }
 
-        if (dateValid) {
-            //dato er valid - OK
-            treatmentDate.setText(day1 + "/" + month1 + "/" + year1);
+        treatmentDate.setText(day1 + "/" + month1 + "/" + year1);
+
+        //date ligger i framtiden - kan ikke velges dato for neste behandling, for man registrerer "neste" behandling
+        if (!dateValid) {
+            nextTreatmentNr.setBackground(getDrawable(R.drawable.input_disabled));
+            nextTreatment.setBackground(getDrawable(R.drawable.input_disabled));
+            nextTreatmentNr.setEnabled(false);
+            nextTreatment.setEnabled(false);
         } else {
-            //dato er ikke valid - vis feilmld
-            treatmentDate.setText(getString(R.string.choose_date));
-            showError("DATE ERROR!", "You can't choose a future date");
+            nextTreatmentNr.setBackground(getDrawable(R.drawable.input));
+            nextTreatment.setBackground(getDrawable(R.drawable.input));
+            nextTreatmentNr.setEnabled(true);
+            nextTreatment.setEnabled(true);
         }
+
     }
 
     private void showError(String title, String message ) {

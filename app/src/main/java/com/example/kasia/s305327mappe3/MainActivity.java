@@ -23,7 +23,7 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
     LinearLayout list;
     DBHandler db;
 
-    //tillate push varsler, false - nei, true -ja
+    //tillatte push varsler, false - nei, true -ja
     private static boolean push = true;
 
     public static void setPush(boolean setValue) {
@@ -32,6 +32,17 @@ public class MainActivity extends AppCompatActivity implements Button.OnClickLis
 
     public static boolean getPush() {
         return push;
+    }
+
+    //tillatte lydeffekter, false - nei, true - ja
+    private static boolean sound = true;
+
+    public static void setSound(boolean setValue) {
+        sound = setValue;
+    }
+
+    public static boolean getSound() {
+        return sound;
     }
 
     @Override

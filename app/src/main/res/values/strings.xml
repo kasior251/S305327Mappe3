@@ -26,6 +26,8 @@
     <string name="yes">Yes</string>
     <string name="push_title">Push Notifications</string>
     <string name="push_info">Allow/deny push notifications</string>
+    <string name="sound_title">Sounds</string>
+    <string name="sound_info">Allow/deny sound effects</string>
     <string name="no_treatments">No treatments found</string>
     <string name="no_coming_treatments">No coming treatments</string>
     <string name="ok">OK</string>

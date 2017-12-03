@@ -128,7 +128,8 @@ public class DBHandler extends SQLiteOpenHelper {
 
     //finner 3 sist utførte behandlinger
     public List<Treatment> findGivenTreatments(int petId) {
-        String selectQuery = "SELECT * FROM " + TABLE_TREATMENTS + " WHERE " + KEY_PET  +" = " + petId + " ORDER BY " + KEY_TREATMENT_DATE + " DESC";
+        String selectQuery = "SELECT * FROM " + TABLE_TREATMENTS + " WHERE " + KEY_PET  +" = " + petId + " AND " + KEY_TREATMENT_DATE + " NOT NULL ORDER BY " + KEY_TREATMENT_DATE + " DESC";
+        Log.d("SQL", "FIND GIVEN TREATMENTS " + selectQuery);
         SQLiteDatabase db = this.getWritableDatabase();
         return getTreatments(selectQuery, db);
     }
@@ -176,8 +177,13 @@ public class DBHandler extends SQLiteOpenHelper {
 
     public void deleteTreatmentNextDate(int id) {
         SQLiteDatabase db = this.getWritableDatabase();
+        //dersom behandlinen var både utført og planlagt -  fjern nextTreatmentDate - må sjekke om den også var utført i neste steg
         String query = "UPDATE " + TABLE_TREATMENTS + " SET " + KEY_NEXT_TREATMENT + " = NULL WHERE " + KEY_ID + " = " + id;
+        //dersom behandlingen var kun planlagt - fjern den helt
+        String query2 = "DELETE FROM " + TABLE_TREATMENTS + " WHERE " + KEY_NEXT_TREATMENT + " IS NULL AND " + KEY_TREATMENT_DATE + " IS NULL AND " + KEY_ID + " = " + id;
+        Log.d("SQL", query2);
         db.execSQL(query);
+        db.execSQL(query2);
         db.close();
     }
 
@@ -187,6 +193,22 @@ public class DBHandler extends SQLiteOpenHelper {
                 new String[]{Integer.toString(id)});
         db.delete(TABLE_TREATMENTS, KEY_PET + " =? ",
                 new String[]{Integer.toString(id)});
+    }
+
+    public void changeNextTreatmentDate(int id, String newDate) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Log.d("DATES SQL", newDate);
+        String query = "UPDATE " + TABLE_TREATMENTS + " SET " + KEY_NEXT_TREATMENT + " = '" + newDate + "' WHERE " + KEY_ID + " = " + id;
+        db.execSQL(query);
+        db.close();
+    }
+
+    public void markAsCompleted(int id, String newDate) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        String query = "UPDATE " + TABLE_TREATMENTS + " SET " + KEY_TREATMENT_DATE + " = '" + newDate + "', " + KEY_NEXT_TREATMENT + " = NULL "  + "WHERE " + KEY_ID + " = " + id;
+        Log.d("DATES SQL", query);
+        db.execSQL(query);
+        db.close();
     }
 
 

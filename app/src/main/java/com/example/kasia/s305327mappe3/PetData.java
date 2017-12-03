@@ -1,8 +1,11 @@
 package com.example.kasia.s305327mappe3;
 
+import android.Manifest;
+import android.app.DatePickerDialog;
 import android.app.Dialog;
 import android.content.Intent;
 import android.graphics.Color;
+import android.media.MediaPlayer;
 import android.os.Bundle;
 import android.support.v7.app.AlertDialog;
 import android.support.v7.app.AppCompatActivity;
@@ -10,6 +13,7 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
@@ -29,7 +33,7 @@ import static java.security.AccessController.getContext;
  * Created by Kasia on 23.11.2017.
  */
 
-public class PetData extends AppCompatActivity {
+public class PetData extends AppCompatActivity implements DatePickerDialog.OnDateSetListener {
 
     DBHandler db;
     ImageView icon;
@@ -44,6 +48,10 @@ public class PetData extends AppCompatActivity {
     int type;
     LinearLayout treatmentView;
     final SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+    MediaPlayer mp;
+    int day, month, year;
+    DatePickerDialog datePickerDialog;
+    int treatmentId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -55,9 +63,20 @@ public class PetData extends AppCompatActivity {
         id = getIntent().getIntExtra("ID", 0);
         //sette bilde for type av dyr
         if (type == 0) {
+            //spill av lyd kun dersom det er tillatt i preferences
+            if (MainActivity.getSound()) {
+                mp = MediaPlayer.create(this, R.raw.meow);
+                mp.start();
+            }
             icon.setImageDrawable(getDrawable(R.drawable.cat));
         } else {
+            //spill av lyd kun dersom det er tillatt i preferences
+            if (MainActivity.getSound()) {
+                mp = MediaPlayer.create(this, R.raw.woof);
+                mp.start();
+            }
             icon.setImageDrawable(getDrawable(R.drawable.dog));
+
         }
         name = (TextView) findViewById(R.id.pet_name);
         //sette navnet på dyret
@@ -196,7 +215,7 @@ public class PetData extends AppCompatActivity {
 
         //list planlagte behandlinger
     public void showDueTreatments(View view) {
-        List<Treatment> treatments = db.findDueTreatments(id);
+        final List<Treatment> treatments = db.findDueTreatments(id);
         treatmentView = (LinearLayout) findViewById(R.id.list);
         treatmentView.removeAllViews();
 
@@ -248,12 +267,29 @@ public class PetData extends AppCompatActivity {
             btn.setImageDrawable(getDrawable(R.drawable.remove));
             row.addView(btn, params);
 
+            ImageButton btnOK = new ImageButton(this);
+            btnOK.setId(t.getId());
+            final int idOK_ = btnOK.getId();
+            btnOK.setImageDrawable(getDrawable(R.drawable.ok));
+            row.addView(btnOK, params);
+
             treatmentView.addView(row);
+
+            Calendar calendar = Calendar.getInstance();
+            datePickerDialog = new DatePickerDialog(this, this, calendar.get(Calendar.YEAR),
+                    calendar.get(Calendar.MONTH), calendar.get(Calendar.DAY_OF_MONTH));
 
             btn.setOnClickListener(new View.OnClickListener() {
                 public void onClick(View view) {
                     deleteNextTreatmentDate(id_);
                     Toast.makeText(PetData.this, "Treatment deleted from list of due treatments", Toast.LENGTH_SHORT).show();
+                }
+            });
+
+            btnOK.setOnClickListener(new View.OnClickListener() {
+                public void onClick(View view) {
+                    treatmentId = idOK_;
+                    datePickerDialog.show();
                 }
             });
         }
@@ -285,4 +321,31 @@ public class PetData extends AppCompatActivity {
         return today.compareTo(date);
     }
 
+    @Override
+    public void onDateSet(DatePicker datePicker, int i, int i1, int i2) {
+        year = i;
+        month = i1;
+        day = i2;
+
+        Calendar c = Calendar.getInstance();
+        c.set(year, month, day);
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyy/MM/dd");
+        String today = sdf.format(Calendar.getInstance().getTime());
+        String newDate = sdf.format(c.getTime());
+        int offset = today.compareTo(newDate);
+        Log.d("DATES", "today " + today + " newDate " + newDate + " offset " + offset);;
+        //valgt dato ligger i fortiden
+        if (today.compareTo(newDate) >= 0) {
+            //dato er i dag eller ligger i fortiden - markere som utført
+            db.markAsCompleted(treatmentId, newDate);
+            Toast.makeText(getApplicationContext(), "Treatment marked as completed", Toast.LENGTH_SHORT).show();
+        } else {
+            //ny dato ligger i framtiden - endre  behandlingsdato
+            db.changeNextTreatmentDate(treatmentId, newDate);
+            Toast.makeText(getApplicationContext(), "Date of treatment changed", Toast.LENGTH_SHORT).show();
+        }
+        finish();
+        startActivity(getIntent());
+
+    }
 }

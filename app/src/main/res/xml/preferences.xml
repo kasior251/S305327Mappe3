@@ -6,7 +6,11 @@
     <CheckBoxPreference android:title="@string/push_title"
         android:defaultValue="true"
         android:summary="@string/push_info"
-        android:key="checkbox_preference"
-        android:id="@+id/checkbox_preference"
-        android:onClick="setPreference"/>
+        android:key="push_preference"
+        android:id="@+id/push_preference"/>
+    <CheckBoxPreference android:title="@string/sound_title"
+        android:defaultValue="true"
+        android:summary="@string/sound_info"
+        android:key="sound_preference"
+        android:id="@+id/sound_preference"/>
 </PreferenceScreen>
